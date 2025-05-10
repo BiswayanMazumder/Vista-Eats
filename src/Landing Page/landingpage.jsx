@@ -118,14 +118,36 @@ export default function Landingpage() {
             <div className="sbdbjdv">
                 Shop groceries on Instamart
                 <div className="dhcdhvc">
+                    <Link style={{ textDecoration: "none" }}>
                     <div className="dhvhdbvdhv">
                         <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/0a688af1-1bb4-4a55-8128-31fc79cc9ad0_6d0abb9a-daff-4fbe-a1c9-2dddb6ae6717" alt="" height={"200px"} width={"200px"} />
                         <br />Fresh Vegetables
                     </div>
+                    </Link>
+                    <Link style={{ textDecoration: "none" }}>
                     <div className="dhvhdbvdhv">
                         <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/85df9d8f-175f-4e3a-8945-468bf6317eee_eb9bf247-f2d1-413d-9cf5-48bc870b222f" alt="" height={"200px"} width={"200px"} />
                         <br />Fresh Fruits
                     </div>
+                    </Link>
+                   <Link style={{ textDecoration: "none" }}>
+                   <div className="dhvhdbvdhv">
+                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/639b3476-3476-4191-b804-63f03372187e_bc1e0aa4-8baa-4875-9095-3074791b7462" alt="" height={"200px"} width={"200px"} />
+                        <br />Dairy, Breads & Eggs
+                    </div>
+                   </Link>
+                    <Link style={{ textDecoration: "none" }}>
+                    <div className="dhvhdbvdhv">
+                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46" alt="" height={"200px"} width={"200px"} />
+                        <br />Rice, Atta and Dals
+                    </div>
+                    </Link>
+                    <Link style={{ textDecoration: "none" }}>
+                    <div className="dhvhdbvdhv">
+                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46" alt="" height={"200px"} width={"200px"} />
+                        <br />Masalas & Dry Fruits
+                    </div>
+                    </Link>
                 </div>
 
             </div>
