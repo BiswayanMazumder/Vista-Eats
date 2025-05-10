@@ -6,9 +6,32 @@ export default function Landingpage() {
         document.title = "Order Food & Groceries. Discover the best restaurants.";
     }, []);
     const [showLogin, setShowLogin] = useState(false);
+    const [clickedlogin,setclickedlogin] = useState(false);
+    const [logindetails, setLoginDetails] = useState(false);
     const toggleLogin = () => {
         setShowLogin(prev => !prev);
     };
+    const checkLogin = () => {
+        const mobilenumber = document.getElementsByClassName("login_input1")[0].value;
+        if (mobilenumber == null) {
+            // alert("Please enter a  mobile number");
+            setLoginDetails(false);
+            setclickedlogin(true);
+        }
+        else {
+            if (mobilenumber.toString().length == 10) {
+                // alert("Login Successful");
+                setLoginDetails(true);
+                setclickedlogin(true);
+                console.log("Login Successful");
+            }
+            else {
+                // alert("Please enter a valid mobile number");
+                setLoginDetails(false);
+                setclickedlogin(true);
+            }
+        }
+    }
     return (
         <div className='webbody'>
             <div className="banner1">
@@ -24,18 +47,25 @@ export default function Landingpage() {
                                     or create an account
                                 </div>
                             </div>
-                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" alt="" height={"80px"} width={"80px"} style={{marginRight:"100px"}}/>
+                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" alt="" height={"80px"} width={"80px"} style={{ marginRight: "100px" }} />
                         </div>
                         <div className="login_input">
                             <input type="number" className="login_input1" placeholder='Phone number' />
                             <Link style={{ textDecoration: "none" }}>
-                            <div className="dnjcbdjvd">
-                                LOGIN
-                            </div>
+                                <div className="dnjcbdjvd" onClick={checkLogin}>
+                                    LOGIN
+                                </div>
                             </Link>
                             <div className="djvbdbv">
-                            By clicking on Login, I accept the Terms & Conditions & Privacy Policy
+                                By clicking on Login, I accept the Terms & Conditions & Privacy Policy
                             </div>
+                            {
+                                clickedlogin && !logindetails && (
+                                    <div className="djvbdbv" style={{ color: "red", fontSize: "12px" }}>
+                                        Please enter a valid mobile number
+                                    </div>
+                                )
+                            }
                         </div>
                     </div>
                 )}
