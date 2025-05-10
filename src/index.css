@@ -283,3 +283,32 @@ code {
 .dhbdbv:hover{
   color:black
 }
+.sbdbjdv{
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  margin-top: 70px;
+  margin-left: 50px;
+  font-family: poppins;
+  font-weight: 600;
+  font-size: 20px;
+}
+.dhvhdbvdhv{
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  justify-content: start;
+  text-align: start;
+  font-family: poppins;
+  font-weight: 600;
+  font-size: 17px;
+  text-align: center;
+  color: black;
+}
+.dhcdhvc{
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  gap:70px;
+}

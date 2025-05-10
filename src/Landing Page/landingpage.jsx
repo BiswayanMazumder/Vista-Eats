@@ -6,7 +6,7 @@ export default function Landingpage() {
         document.title = "Order Food & Groceries. Discover the best restaurants.";
     }, []);
     const [showLogin, setShowLogin] = useState(false);
-    const [clickedlogin,setclickedlogin] = useState(false);
+    const [clickedlogin, setclickedlogin] = useState(false);
     const [logindetails, setLoginDetails] = useState(false);
     const toggleLogin = () => {
         setShowLogin(prev => !prev);
@@ -115,7 +115,20 @@ export default function Landingpage() {
                     />
                 </div>
             </div>
-            {/* ndhvbdvmd */}
+            <div className="sbdbjdv">
+                Shop groceries on Instamart
+                <div className="dhcdhvc">
+                    <div className="dhvhdbvdhv">
+                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/0a688af1-1bb4-4a55-8128-31fc79cc9ad0_6d0abb9a-daff-4fbe-a1c9-2dddb6ae6717" alt="" height={"200px"} width={"200px"} />
+                        <br />Fresh Vegetables
+                    </div>
+                    <div className="dhvhdbvdhv">
+                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/85df9d8f-175f-4e3a-8945-468bf6317eee_eb9bf247-f2d1-413d-9cf5-48bc870b222f" alt="" height={"200px"} width={"200px"} />
+                        <br />Fresh Fruits
+                    </div>
+                </div>
+
+            </div>
         </div>
     )
 }
