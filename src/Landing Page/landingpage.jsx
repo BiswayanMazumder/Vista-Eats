@@ -12,6 +12,11 @@ export default function Landingpage() {
                 <Link to="/">
                 <img src="https://firebasestorage.googleapis.com/v0/b/wingedwordsadmin.appspot.com/o/Vista%20Eats%2FChatGPT%20Image%20May%2010%2C%202025%2C%2001_32_03%20PM.png?alt=media&token=d04e9a1b-11a7-4816-848f-f91099f3b1af" alt="" height={"70px"} width={"90px"} />
                 </Link>
+                <Link style={{ textDecoration: "none" }} to="/login">
+                    <div className="loginbtn">
+                        Sign in
+                    </div>
+                </Link>
             </div>
                 <div className="banner1_images">
                     <img
@@ -45,7 +50,6 @@ export default function Landingpage() {
                         alt=""
                         className="vegetable vegetable-right"
                     />
-                
                 </div>
             </div>
 
