@@ -89,5 +89,13 @@ code {
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  top: 60px;
+  top: 40px;
+}
+.headers{
+  position: relative;
+  top: 30px;
+  left: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
