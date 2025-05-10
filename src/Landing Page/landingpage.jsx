@@ -149,7 +149,9 @@ export default function Landingpage() {
                     </div>
                     </Link>
                 </div>
-
+                <div className="hdfhdf">
+                Discover best restaurants on Dineout
+                </div>
             </div>
         </div>
     )

@@ -312,3 +312,13 @@ code {
   flex-direction: row;
   gap:70px;
 }
+.hdfhdf{
+  width: 100vw;
+  /* height: 100vh; */
+  background-color: white;
+  display: flex;
+  font-family: poppins;
+  font-weight: 600;
+  flex-direction: column;
+  margin-top: 70px;
+}
