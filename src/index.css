@@ -11,3 +11,36 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.webbody{
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  
+  color: black;
+}
+.banner1{
+  background-color: #FF5200;
+  color: white;
+  position: absolute;
+  height: 100vh;
+  overflow: hidden;
+  width: 100%;
+}
+.banner1_images{
+  position: absolute;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.vegetable1{
+  height: 50vh;
+  position: relative;
+  top: 25vh;
+}
+.vegetable2{
+  height: 50vh;
+  position: relative;
+  top: 25vh;
+  left: 0;
+}
