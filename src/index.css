@@ -196,3 +196,47 @@ code {
   display: inline-flex;
   gap: 10px; /* spacing between images */
 }
+.loginsection {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 30vw;
+  background-color: white;
+  z-index: 1001;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+.dgvdbdc{
+  display: flex;
+  flex-direction: column;
+}
+.jhdcjdhc{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: black;
+  font-weight: poppins;
+  margin-top: 50px;
+  margin-left: 40px;
+  font-size: 28px;
+  font-weight: 600;
+}
+.dfhdf{
+  font-weight: poppins;
+  color: #FF5200;
+  font-size: 17px;
+  margin-top: 10px;
+  font-weight: 500;
+}
