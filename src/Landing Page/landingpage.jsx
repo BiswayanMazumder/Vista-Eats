@@ -33,7 +33,7 @@ export default function Landingpage() {
         }
     }
     return (
-        <div className='webbody'>
+        <div className='webbody' style={{ overflowX: "hidden" }}>
             <div className="banner1">
                 {showLogin && <div className="blur-overlay" onClick={toggleLogin}></div>}
 
@@ -115,8 +115,7 @@ export default function Landingpage() {
                     />
                 </div>
             </div>
-
-
+            {/* ndhvbdvmd */}
         </div>
     )
 }
