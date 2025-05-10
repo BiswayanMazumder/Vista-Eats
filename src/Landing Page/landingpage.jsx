@@ -26,6 +26,17 @@ export default function Landingpage() {
                             </div>
                             <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" alt="" height={"80px"} width={"80px"} style={{marginRight:"100px"}}/>
                         </div>
+                        <div className="login_input">
+                            <input type="number" className="login_input1" placeholder='Phone number' />
+                            <Link style={{ textDecoration: "none" }}>
+                            <div className="dnjcbdjvd">
+                                LOGIN
+                            </div>
+                            </Link>
+                            <div className="djvbdbv">
+                            By clicking on Login, I accept the Terms & Conditions & Privacy Policy
+                            </div>
+                        </div>
                     </div>
                 )}
                 <div className="headers">

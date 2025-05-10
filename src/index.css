@@ -240,3 +240,43 @@ code {
   margin-top: 10px;
   font-weight: 500;
 }
+.login_input{
+  display: flex;
+  flex-direction: column;
+}
+.login_input1{
+  width: 80%;
+  height: 70px;
+  position: relative;
+  margin-left: 40px;
+  margin-top: 20px;
+  border-radius: 10px;
+  border: 0.5px solid grey;
+  font-family: poppins;
+}
+.dnjcbdjvd{
+  position: relative;
+  height: 70px;
+  width: 81%;
+  margin-left: 40px;
+  margin-top: 30px;
+  background-color: #FF5200;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: poppins;
+  font-weight: 600;
+}
+.dnjcbdjvd:hover{
+  background-color: #e6510c;
+}
+.djvbdbv{
+  font-weight: 600;
+  font-family: poppins;
+  font-size: 10px;
+  color: black;
+  margin-left: 40px;
+  margin-top: 20px;
+}
