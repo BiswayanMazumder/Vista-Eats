@@ -18,29 +18,76 @@ code {
   
   color: black;
 }
-.banner1{
+.banner1 {
   background-color: #FF5200;
   color: white;
-  position: absolute;
+  position: relative;
   height: 100vh;
-  overflow: hidden;
   width: 100%;
+  overflow: hidden;
 }
-.banner1_images{
+
+.banner1_images {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.vegetable {
+  height: 50vh;
   position: absolute;
-  width: 100vw;
+  top: 25vh;
+}
+
+.vegetable-left {
+  left: 0;
+}
+
+.vegetable-right {
+  right: 0;
+}
+
+.banner_txt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, Cochin, Georgia, Times, 'Times New Roman', serif;
+  /* max-width: 600px; */
+  font-size: 48px;
   display: flex;
+  flex-direction: column;
+}
+.restaurants_input{
+  position: relative;
+  top: 30px;
+}
+.dhfhdfjdfn{
+  height: 75px;
+  width: 70vw;
+  margin-left: 50px;
+  background-color: white;
+  border-radius: 20px;
+  border: none;
+  color: grey;
+  font-size: 18px;
+  font-weight: 300;
   flex-direction: row;
   justify-content: space-between;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  padding-left: 20px;
 }
-.vegetable1{
-  height: 50vh;
+.dhfhjdhfjefh{
   position: relative;
-  top: 25vh;
-}
-.vegetable2{
-  height: 50vh;
-  position: relative;
-  top: 25vh;
-  left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  top: 60px;
 }
