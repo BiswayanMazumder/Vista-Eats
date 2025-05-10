@@ -56,7 +56,7 @@ code {
   text-align: center;
   color: white;
   font-weight: 700;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: poppins;
   /* max-width: 600px; */
   font-size: 48px;
   display: flex;
@@ -118,4 +118,81 @@ code {
   color: black;
   transition: 0.3s;
   cursor: pointer;
+}
+.dchcdbkvnvj{
+  width: 100vw;
+  height: 90px;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.djdhfdjf{
+  position: relative;
+  margin-left: 50px;
+  display: flex;
+  align-items: center;
+  /* gap: 20px; */
+  /* justify-content: space-between; */
+  flex-direction: row;
+
+}
+.location{
+  font-weight: 700;
+  font-family: poppins;
+  margin-left:10px;
+}
+.location:hover{
+  color: #FF5200;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.djfjdkfkf{
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dfndfkemf{
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  width: 70vw;
+  height: 100vh;
+}
+.search_input{
+  position: relative;
+  margin-top: 50px;
+  width: 100%;
+  height: 50px;
+  font-family: poppins;
+  /* border-color: grey; */
+  border: 0.5px solid grey;
+  border-radius: 10px;
+}
+.search_input::placeholder{
+  color: grey;
+  margin-left: 10px;
+}
+.sjskdfklf{
+  position: relative;
+  display: flex;
+  margin-top: 50px;
+  font-family: poppins;
+  font-weight: 700;
+  font-size: 25px;
+}
+.shgdhdfjdbf{
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+  margin-top: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
+}
+.shfhf {
+  display: inline-flex;
+  gap: 10px; /* spacing between images */
 }
