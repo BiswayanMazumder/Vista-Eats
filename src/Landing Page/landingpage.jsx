@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from 'firebase/app';
+import { getAnalytics } from 'firebase/analytics';
+import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyDbvSTnxYTfPEPQ4HpHAjYQ3Gobas7MZY0",
-    authDomain: "vistaeats.firebaseapp.com",
-    projectId: "vistaeats",
-    storageBucket: "vistaeats.firebasestorage.app",
-    messagingSenderId: "931029105010",
-    appId: "1:931029105010:web:c1b851904598e90be045eb",
-    measurementId: "G-0C8M4W6GXJ"
+    apiKey: 'AIzaSyDbvSTnxYTfPEPQ4HpHAjYQ3Gobas7MZY0',
+    authDomain: 'vistaeats.firebaseapp.com',
+    projectId: 'vistaeats',
+    storageBucket: 'vistaeats.firebasestorage.app',
+    messagingSenderId: '931029105010',
+    appId: '1:931029105010:web:c1b851904598e90be045eb',
+    measurementId: 'G-0C8M4W6GXJ'
 };
 
 // Initialize Firebase
@@ -25,46 +22,51 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 export const auth = getAuth(app);
+
 export default function Landingpage() {
     useEffect(() => {
         document.title = "Order Food & Groceries. Discover the best restaurants.";
     }, []);
+
     const [showLogin, setShowLogin] = useState(false);
-    const [clickedlogin, setclickedlogin] = useState(false);
-    const [logindetails, setLoginDetails] = useState(false);
-    const [phone, setPhone] = useState("");
-    const [otp, setOtp] = useState("");
+    const [clickedLogin, setClickedLogin] = useState(false);
+    const [loginDetails, setLoginDetails] = useState(false);
+    const [phone, setPhone] = useState('');
+    const [otp, setOtp] = useState('');
     const [confirmationResult, setConfirmationResult] = useState(null);
+    const [OTP, setOTP] = useState(false);
+    const [userid, setUserid] = useState('');
+    const [userRegistered, setUserRegistered] = useState(false);
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+
     const toggleLogin = () => {
-        setShowLogin(prev => !prev);
+        setShowLogin((prev) => !prev);
     };
+
     const checkLogin = () => {
-        const mobilenumber = document.getElementsByClassName("login_input1")[0].value;
+        const mobilenumber = document.getElementsByClassName('login_input1')[0].value;
         if (mobilenumber == null) {
-            // alert("Please enter a  mobile number");
             setLoginDetails(false);
-            setclickedlogin(true);
-        }
-        else {
-            if (mobilenumber.toString().length == 10) {
-                // alert("Login Successful");
+            setClickedLogin(true);
+        } else {
+            if (mobilenumber.toString().length === 10) {
                 setLoginDetails(true);
-                setclickedlogin(true);
-                console.log("Login Successful");
-            }
-            else {
-                // alert("Please enter a valid mobile number");
+                setClickedLogin(true);
+                console.log('Login Successful');
+            } else {
                 setLoginDetails(false);
-                setclickedlogin(true);
+                setClickedLogin(true);
             }
         }
-    }
+    };
+
     useEffect(() => {
         if (showLogin && !window.recaptchaVerifier) {
             const setupRecaptcha = () => {
                 const recaptchaContainer = document.getElementById('recaptcha-container');
                 if (!recaptchaContainer) {
-                    console.error("reCAPTCHA container not found.");
+                    console.error('reCAPTCHA container not found.');
                     return;
                 }
 
@@ -74,197 +76,297 @@ export default function Landingpage() {
                         {
                             size: 'invisible',
                             callback: (response) => {
-                                console.log("reCAPTCHA verified");
-                            },
+                                console.log('reCAPTCHA verified');
+                            }
                         },
                         auth
                     );
-
-                    console.log("reCAPTCHA successfully set up");
+                    console.log('reCAPTCHA successfully set up');
                 } catch (error) {
-                    console.error("Error setting up reCAPTCHA:", error);
+                    console.error('Error setting up reCAPTCHA:', error);
                 }
             };
 
             setupRecaptcha();
         }
     }, [showLogin]);
-    const [OTP, setOTP] = useState(false);
-    const sendOTP = async () => {
-        const formattedPhone = phone.startsWith('+91 ') ? phone : `+91 ${phone}`;
 
+    const sendOTP = async () => {
+        const formattedPhone = phone.startsWith('+91 ') ? phone : `+91${phone}`;
         try {
             const appVerifier = window.recaptchaVerifier;
             const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
             setConfirmationResult(result);
             setOTP(true);
-            // alert("OTP sent!");
+            console.log('OTP sent!');
         } catch (error) {
-            console.error("Error sending OTP:", error);
-            // alert("Failed to send OTP");
+            console.error('Error sending OTP:', error);
         }
     };
-    const [userid, setuserid] = useState("");
-    const [userregistered, setuserregistered] = useState(false);
+
     const verifyOTP = async () => {
         try {
             const result = await confirmationResult.confirm(otp);
             const user = result.user;
-            setuserid(user.uid);
-            // console.log("User ID:", user.uid);
-            // alert("Phone number verified!");
+            setUserid(user.uid);
+            console.log('User ID:', user.uid);
         } catch (error) {
-            console.error("Error verifying OTP:", error);
+            console.error('Error verifying OTP:', error);
         }
     };
-    const getuserdetails = async () => {
+
+    const getUserDetails = async () => {
         await verifyOTP();
         const user = auth.currentUser;
         const uid = user.uid;
-        const docRef = doc(db, "Registered Phone Numbers","Phone Numbers");
+        const docRef = doc(db, 'Registered Phone Numbers', 'Phone Numbers');
         const docSnap = await getDoc(docRef);
-        if(docSnap.exists()) {
+        if (docSnap.exists()) {
             const data = docSnap.data();
-            console.log("Document data:", data);
-            if (data["Contact Details"].includes(phone)) {
-                setuserregistered(true);
-                // alert("User already registered");
+            console.log('Document data:', data);
+            if (data['Contact Details'].includes(phone)) {
+                setUserRegistered(true);
+                setShowLogin(false);
+                console.log('User already registered');
             } else {
-                setuserregistered(false);
-                // alert("User not registered");
+                setUserRegistered(false);
+                try {
+                    await setDoc(doc(db, 'Users', auth.currentUser.uid), {
+                        'User ID': auth.currentUser.uid,
+                        'Phone Number': phone,
+                        'Name': 'Default User',
+                        'Email': `${phone}@vistaeats.com`
+                    });
+                    setShowLogin(false);
+                } catch (error) {
+                    console.error('Error writing document:', error);
+                }
+
+                try {
+                    await setDoc(doc(db, 'Registered Phone Numbers', 'Phone Numbers'), {
+                        'Contact Details': [phone]
+                    }, { merge: true });
+                    setShowLogin(false);
+                } catch (error) {
+                    console.error('Error writing document:', error);
+                }
+
+                console.log('User not registered');
             }
         }
-    }
-    const [email,setEmail] = useState("");
-    const [name,setName] = useState("");
+    };
+
     return (
-        <div className='webbody' style={{ overflowX: "hidden" }}>
-            <div className="banner1">
-                {showLogin && <div className="blur-overlay" onClick={toggleLogin}></div>}
+        <div className='webbody' style={{ overflowX: 'hidden' }}>
+            <div className='banner1'>
+                {showLogin && <div className='blur-overlay' onClick={toggleLogin}></div>}
 
                 {/* Sidebar login section */}
                 {showLogin && (
-                    <div className="loginsection">
-                        <div className="jhdcjdhc">
-                            <div className="dgvdbdc">
+                    <div className='loginsection'>
+                        <div className='jhdcjdhc'>
+                            <div className='dgvdbdc'>
                                 Login
-                                <div className="dfhdf">
-                                    or create an account
-                                </div>
+                                <div className='dfhdf'>or create an account</div>
                             </div>
-                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" alt="" height={"80px"} width={"80px"} style={{ marginRight: "100px" }} />
+                            <img
+                                src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r'
+                                alt=''
+                                height={'80px'}
+                                width={'80px'}
+                                style={{ marginRight: '100px' }}
+                            />
                         </div>
-                        <div className="login_input">
-                            <input type="number" className="login_input1" placeholder='Phone number' value={phone} onChange={(e) => setPhone(e.target.value)} />
-                            {OTP ? <input type="number" className="login_input1" placeholder='Enter OTP' value={otp} maxLength={6} onChange={(e) => setOtp(e.target.value)} /> : <></>}
-                            {
-                                userid!=""?userregistered?<></>:(<input type="text" className="login_input1" placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />):<></>
-                            }
-                            {userid!=""?userregistered?<></>:(<input type="email" className="login_input1" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />):<></>}
-                            <Link style={{ textDecoration: "none" }}>
-                                <div className="dnjcbdjvd" onClick={() => { OTP ? getuserdetails() : sendOTP(); }}>
-                                    {OTP ?!userregistered?"Register User": "Verify OTP" : "LOGIN"}
+                        <div className='login_input'>
+                            <input
+                                type='number'
+                                className='login_input1'
+                                placeholder='Phone number'
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                            />
+                            {OTP ? (
+                                <input
+                                    type='number'
+                                    className='login_input1'
+                                    placeholder='Enter OTP'
+                                    value={otp}
+                                    maxLength={6}
+                                    onChange={(e) => setOtp(e.target.value)}
+                                />
+                            ) : (
+                                <></>
+                            )}
+                            {userid !== '' && !userRegistered && (
+                                <>
+                                    <input
+                                        type='text'
+                                        className='login_input1'
+                                        placeholder='Name'
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                    <input
+                                        type='email'
+                                        className='login_input1'
+                                        placeholder='Email'
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </>
+                            )}
+                            <Link style={{ textDecoration: 'none' }}>
+                                <div
+                                    className='dnjcbdjvd'
+                                    onClick={() => {
+                                        OTP ? getUserDetails() : sendOTP();
+                                    }}
+                                >
+                                    {OTP ? (!userRegistered ? 'Register User' : 'Verify OTP') : 'LOGIN'}
                                 </div>
                             </Link>
-                            <div className="djvbdbv">
+                            <div className='djvbdbv'>
                                 By clicking on Login, I accept the Terms & Conditions & Privacy Policy
                             </div>
-                            {
-                                clickedlogin && !logindetails && (
-                                    <div className="djvbdbv" style={{ color: "red", fontSize: "12px" }}>
-                                        Please enter a valid mobile number
-                                    </div>
-                                )
-                            }
+                            {clickedLogin && !loginDetails && (
+                                <div
+                                    className='djvbdbv'
+                                    style={{ color: 'red', fontSize: '12px' }}
+                                >
+                                    Please enter a valid mobile number
+                                </div>
+                            )}
                         </div>
-                        <div id="recaptcha-container"></div>
-
+                        <div id='recaptcha-container'></div>
                     </div>
                 )}
-                <div className="headers">
-                    <Link to="/">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/wingedwordsadmin.appspot.com/o/Vista%20Eats%2FChatGPT%20Image%20May%2010%2C%202025%2C%2001_32_03%20PM.png?alt=media&token=d04e9a1b-11a7-4816-848f-f91099f3b1af" alt="" height={"70px"} width={"90px"} />
+                <div className='headers'>
+                    <Link to='/'>
+                        <img
+                            src='https://firebasestorage.googleapis.com/v0/b/wingedwordsadmin.appspot.com/o/Vista%20Eats%2FChatGPT%20Image%20May%2010%2C%202025%2C%2001_32_03%20PM.png?alt=media&token=d04e9a1b-11a7-4816-848f-f91099f3b1af'
+                            alt=''
+                            height={'70px'}
+                            width={'90px'}
+                        />
                     </Link>
-                    <Link style={{ textDecoration: "none" }}>
-                        <div className="loginbtn" onClick={toggleLogin}>
-                            Sign in
-                        </div>
-                    </Link>
-                </div>
-                <div className="banner1_images">
-                    <img
-                        src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/portal/testing/seo-home/Veggies_new.png"
-                        alt=""
-                        className="vegetable vegetable-left"
-                    />
-
-                    <div className="banner_txt">
-
-                        Order food & groceries. Discover <br />best restaurants. Vista it!
-                        <Link to="/search" style={{ textDecoration: "none" }}>
-                            <div className="restaurants_input">
-                                <div className='dhfhdfjdfn'>
-                                    Search for restaurants, dishes, cuisines
-                                </div>
+                    {auth.currentUser?.uid == null ? (
+                        <Link style={{ textDecoration: 'none' }}>
+                            <div className='loginbtn' onClick={toggleLogin}>
+                                Sign in
                             </div>
                         </Link>
-                        <div className="dhfhjdhfjefh">
+                    ) : (
+                        <Link style={{ textDecoration: 'none' }}>
+                            <div className='loginbtn' >
+                                Log Out
+                            </div>
+                        </Link>
+                    )}
+                </div>
+                <div className='banner1_images'>
+                    <img
+                        src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/portal/testing/seo-home/Veggies_new.png'
+                        alt=''
+                        className='vegetable vegetable-left'
+                    />
+
+                    <div className='banner_txt'>
+                        Order food & groceries. Discover <br />best restaurants. Vista it!
+                        <Link to='/search' style={{ textDecoration: 'none' }}>
+                            <div className='restaurants_input'>
+                                <div className='dhfhdfjdfn'>Search for restaurants, dishes, cuisines</div>
+                            </div>
+                        </Link>
+                        <div className='dhfhjdhfjefh'>
                             <Link>
-                                <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/23/ec86a309-9b06-48e2-9adc-35753f06bc0a_Food3BU.png" alt="" height={"350px"} width={"400px"} />
+                                <img
+                                    src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/23/ec86a309-9b06-48e2-9adc-35753f06bc0a_Food3BU.png'
+                                    alt=''
+                                    height={'350px'}
+                                    width={'400px'}
+                                />
                             </Link>
                             <Link>
-                                <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/23/b5c57bbf-df54-4dad-95d1-62e3a7a8424d_IM3BU.png" alt="" height={"350px"} width={"400px"} />
+                                <img
+                                    src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/23/b5c57bbf-df54-4dad-95d1-62e3a7a8424d_IM3BU.png'
+                                    alt=''
+                                    height={'350px'}
+                                    width={'400px'}
+                                />
                             </Link>
                             <Link>
-                                <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/23/b6d9b7ab-91c7-4f72-9bf2-fcd4ceec3537_DO3BU.png" alt="" height={"350px"} width={"400px"} />
+                                <img
+                                    src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/MERCHANDISING_BANNERS/IMAGES/MERCH/2024/7/23/b6d9b7ab-91c7-4f72-9bf2-fcd4ceec3537_DO3BU.png'
+                                    alt=''
+                                    height={'350px'}
+                                    width={'400px'}
+                                />
                             </Link>
                         </div>
                     </div>
                     <img
-                        src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/portal/testing/seo-home/Sushi_replace.png"
-                        alt=""
-                        className="vegetable vegetable-right"
+                        src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/portal/testing/seo-home/Sushi_replace.png'
+                        alt=''
+                        className='vegetable vegetable-right'
                     />
                 </div>
             </div>
-            <div className="sbdbjdv">
+            <div className='sbdbjdv'>
                 Shop groceries on Instamart
-                <div className="dhcdhvc">
-                    <Link style={{ textDecoration: "none" }}>
-                        <div className="dhvhdbvdhv">
-                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/0a688af1-1bb4-4a55-8128-31fc79cc9ad0_6d0abb9a-daff-4fbe-a1c9-2dddb6ae6717" alt="" height={"200px"} width={"200px"} />
-                            <br />Fresh Vegetables
+                <div className='dhcdhvc'>
+                    <Link style={{ textDecoration: 'none' }}>
+                        <div className='dhvhdbvdhv'>
+                            <img
+                                src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/0a688af1-1bb4-4a55-8128-31fc79cc9ad0_6d0abb9a-daff-4fbe-a1c9-2dddb6ae6717'
+                                alt=''
+                                height={'200px'}
+                                width={'200px'}
+                            />
+                            <br />
+                            Fresh Vegetables
                         </div>
                     </Link>
-                    <Link style={{ textDecoration: "none" }}>
-                        <div className="dhvhdbvdhv">
-                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/85df9d8f-175f-4e3a-8945-468bf6317eee_eb9bf247-f2d1-413d-9cf5-48bc870b222f" alt="" height={"200px"} width={"200px"} />
-                            <br />Fresh Fruits
+                    <Link style={{ textDecoration: 'none' }}>
+                        <div className='dhvhdbvdhv'>
+                            <img
+                                src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/85df9d8f-175f-4e3a-8945-468bf6317eee_eb9bf247-f2d1-413d-9cf5-48bc870b222f'
+                                alt=''
+                                height={'200px'}
+                                width={'200px'}
+                            />
+                            <br />
+                            Fresh Fruits
                         </div>
                     </Link>
-                    <Link style={{ textDecoration: "none" }}>
-                        <div className="dhvhdbvdhv">
-                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/639b3476-3476-4191-b804-63f03372187e_bc1e0aa4-8baa-4875-9095-3074791b7462" alt="" height={"200px"} width={"200px"} />
-                            <br />Dairy, Breads & Eggs
+                    <Link style={{ textDecoration: 'none' }}>
+                        <div className='dhvhdbvdhv'>
+                            <img
+                                src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/639b3476-3476-4191-b804-63f03372187e_bc1e0aa4-8baa-4875-9095-3074791b7462'
+                                alt=''
+                                height={'200px'}
+                                width={'200px'}
+                            />
+                            <br />
+                            Dairy, Breads & Eggs
                         </div>
                     </Link>
-                    <Link style={{ textDecoration: "none" }}>
-                        <div className="dhvhdbvdhv">
-                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46" alt="" height={"200px"} width={"200px"} />
-                            <br />Rice, Atta and Dals
-                        </div>
-                    </Link>
-                    <Link style={{ textDecoration: "none" }}>
-                        <div className="dhvhdbvdhv">
-                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46" alt="" height={"200px"} width={"200px"} />
-                            <br />Masalas & Dry Fruits
+                    <Link style={{ textDecoration: 'none' }}>
+                        <div className='dhvhdbvdhv'>
+                            <img
+                                src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46'
+                                alt=''
+                                height={'200px'}
+                                width={'200px'}
+                            />
+                            <br />
+                            Rice, Atta and Dals
                         </div>
                     </Link>
                 </div>
-                <div className="hdfhdf">
+                <div className='hdfhdf'>
                     Discover best restaurants on Dineout
                 </div>
             </div>
         </div>
-    )
+    );
 }
