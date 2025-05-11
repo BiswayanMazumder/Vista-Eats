@@ -65,6 +65,23 @@ export default function Accounts_homepage() {
         };
         fetchUserData();
     }, [user]);
+    const [orders, setorders] = useState([]);
+    const [orderdetails, setorderdetails] = useState(false);
+    const [activeTab, setActiveTab] = useState('Orders');
+
+    useState(() => {
+        const fetchorders = async () => {
+            const user = auth.currentUser;
+            const uid = user.uid;
+            const docRef = doc(db, 'User Orders', user);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setorderdetails(true);
+                const data = docSnap.data();
+            }
+        }
+        fetchorders();
+    }, [user]);
     return (
         <div className="webbody" style={{ overflowX: 'scroll' }}>
             <Headers label="MY ACCOUNT" />
@@ -78,12 +95,48 @@ export default function Accounts_homepage() {
                 <div className="dbnfjvnf">
                     <div className="ffbvfv">
                         <div className="bdvhdbvjdv">
+                            <div
+                                className="ndjvhjdvhdj"
+                                style={{ backgroundColor: activeTab === 'Orders' ? 'white' : 'transparent' }}
+                                onClick={() => setActiveTab('Orders')}
+                            >
+                                <Link  className="djcdjh" style={{ textDecoration: 'none', color: 'black' }}>
+                                    Orders
+                                </Link>
+                            </div>
 
-                        </div>
-                        <div className="dhgchdgd">
-                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_262/empty-orders-image_acrbbw" alt="" />
+                            <div
+                                className="ndjvhjdvhdj"
+                                style={{ backgroundColor: activeTab === 'Favourites' ? 'white' : 'transparent' }}
+                                onClick={() => setActiveTab('Favourites')}
+                            >
+                                <Link  className="jdfb" style={{ textDecoration: 'none', color: 'black' }}>
+                                    Favourites
+                                </Link>
+                            </div>
+
+                            <div
+                                className="ndjvhjdvhdj"
+                                style={{ backgroundColor: activeTab === 'Addresses' ? 'white' : 'transparent' }}
+                                onClick={() => setActiveTab('Addresses')}
+                            >
+                                <Link  className="bdvbdv" style={{ textDecoration: 'none', color: 'black' }}>
+                                    Addresses
+                                </Link>
+                            </div>
+
+                            <div
+                                className="ndjvhjdvhdj"
+                                style={{ backgroundColor: activeTab === 'Payment' ? 'white' : 'transparent' }}
+                                onClick={() => setActiveTab('Payment')}
+                            >
+                                <Link  className="ndbcdb" style={{ textDecoration: 'none', color: 'black' }}>
+                                    Payment
+                                </Link>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
