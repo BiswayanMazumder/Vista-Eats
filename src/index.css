@@ -328,3 +328,24 @@ code {
 .djnjnjgnrjgn:hover{
   cursor: pointer;
 }
+.jfnbjngb{
+  /* position: relative; */
+  width: 100vw;
+  height: 100vh;
+  background-color: #37718E;
+}
+.ndbhvbhfv{
+  position: absolute;
+  color: white;
+  font-family: poppins;
+  font-weight: 600;
+  font-size: 30px;
+  margin-top: 150px;
+  margin-left: 150px;
+  text-align: start;
+}
+.jdhvjv{
+  font-size: 15px;
+  margin-top: 10px;
+  font-weight: 400;
+}

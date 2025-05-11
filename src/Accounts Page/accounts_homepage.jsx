@@ -25,20 +25,58 @@ const db = getFirestore(app);
 export const auth = getAuth(app);
 
 export default function Accounts_homepage() {
-        useEffect(() => {
-            const unsubscribe = auth.onAuthStateChanged((user) => {
-                if (user) {
-                    // setuser(user);
-                    // console.log('User is signed in:', user);
-                } else {
-                    window.location.href = '/';
-                    // setuser(null);
-                }
-            });
-            return unsubscribe;
-        }, []);
-  return (
-    <Headers label="MY ACCOUNT" />
+    const [user, setuser] = useState('');
+    useEffect(() => {
+        document.title = "Order Food & Groceries. Discover the best restaurants.";
+    }, []);
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                setuser(user.uid);
+                // console.log('User is signed in:', user.uid);
+            } else {
+                window.location.href = '/';
+                // setuser(null);
+            }
+        });
+        return unsubscribe;
+    }, []);
+    const [username, setusername] = useState('');
+    const [email, setemail] = useState('');
+    const [phone, setphone] = useState('');
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (user) {
 
-  )
+                const docRef = doc(db, 'Users', user);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    // console.log('Document data:', docSnap.data());
+                    const data = docSnap.data();
+                    setusername(data['Name']);
+                    setemail(data['Email']);
+                    setphone(data['Phone Number']);
+                    // console.log(data['Name']);
+                    // console.log(data['Email']);
+                } else {
+                    console.log('No such document!');
+                }
+            }
+        };
+        fetchUserData();
+    }, [user]);
+    return (
+        <div className="webbody" style={{ overflowY: "hidden" }}>
+            <Headers label="MY ACCOUNT" />
+            <div className="jfnbjngb">
+                <div className="ndbhvbhfv">
+                    {username}
+                    <div className="jdhvjv">
+                        {phone}    •    {email}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    )
 }
