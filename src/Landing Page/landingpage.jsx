@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -59,61 +59,84 @@ export default function Landingpage() {
             }
         }
     }
-useEffect(() => {
-    if (showLogin && !window.recaptchaVerifier) {
-        const setupRecaptcha = () => {
-            const recaptchaContainer = document.getElementById('recaptcha-container');
-            if (!recaptchaContainer) {
-                console.error("reCAPTCHA container not found.");
-                return;
-            }
+    useEffect(() => {
+        if (showLogin && !window.recaptchaVerifier) {
+            const setupRecaptcha = () => {
+                const recaptchaContainer = document.getElementById('recaptcha-container');
+                if (!recaptchaContainer) {
+                    console.error("reCAPTCHA container not found.");
+                    return;
+                }
 
-            try {
-                window.recaptchaVerifier = new RecaptchaVerifier(
-                    recaptchaContainer,
-                    {
-                        size: 'invisible',
-                        callback: (response) => {
-                            console.log("reCAPTCHA verified");
+                try {
+                    window.recaptchaVerifier = new RecaptchaVerifier(
+                        recaptchaContainer,
+                        {
+                            size: 'invisible',
+                            callback: (response) => {
+                                console.log("reCAPTCHA verified");
+                            },
                         },
-                    },
-                    auth
-                );
+                        auth
+                    );
 
-                console.log("reCAPTCHA successfully set up");
-            } catch (error) {
-                console.error("Error setting up reCAPTCHA:", error);
-            }
-        };
+                    console.log("reCAPTCHA successfully set up");
+                } catch (error) {
+                    console.error("Error setting up reCAPTCHA:", error);
+                }
+            };
 
-        setupRecaptcha();
-    }
-}, [showLogin]);
-const [OTP, setOTP] = useState(false);
-const sendOTP = async () => {
-    const formattedPhone = phone.startsWith('+91 ') ? phone : `+91 ${phone}`;
+            setupRecaptcha();
+        }
+    }, [showLogin]);
+    const [OTP, setOTP] = useState(false);
+    const sendOTP = async () => {
+        const formattedPhone = phone.startsWith('+91 ') ? phone : `+91 ${phone}`;
 
-    try {
-        const appVerifier = window.recaptchaVerifier;
-        const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-        setConfirmationResult(result);
-        setOTP(true);
-        // alert("OTP sent!");
-    } catch (error) {
-        console.error("Error sending OTP:", error);
-        // alert("Failed to send OTP");
-    }
-};
-
-
+        try {
+            const appVerifier = window.recaptchaVerifier;
+            const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
+            setConfirmationResult(result);
+            setOTP(true);
+            // alert("OTP sent!");
+        } catch (error) {
+            console.error("Error sending OTP:", error);
+            // alert("Failed to send OTP");
+        }
+    };
+    const [userid, setuserid] = useState("");
+    const [userregistered, setuserregistered] = useState(false);
     const verifyOTP = async () => {
         try {
-            await confirmationResult.confirm(otp);
+            const result = await confirmationResult.confirm(otp);
+            const user = result.user;
+            setuserid(user.uid);
+            // console.log("User ID:", user.uid);
             // alert("Phone number verified!");
         } catch (error) {
             console.error("Error verifying OTP:", error);
         }
+    };
+    const getuserdetails = async () => {
+        await verifyOTP();
+        const user = auth.currentUser;
+        const uid = user.uid;
+        const docRef = doc(db, "Registered Phone Numbers","Phone Numbers");
+        const docSnap = await getDoc(docRef);
+        if(docSnap.exists()) {
+            const data = docSnap.data();
+            console.log("Document data:", data);
+            if (data["Contact Details"].includes(phone)) {
+                setuserregistered(true);
+                // alert("User already registered");
+            } else {
+                setuserregistered(false);
+                // alert("User not registered");
+            }
+        }
     }
+    const [email,setEmail] = useState("");
+    const [name,setName] = useState("");
     return (
         <div className='webbody' style={{ overflowX: "hidden" }}>
             <div className="banner1">
@@ -133,10 +156,14 @@ const sendOTP = async () => {
                         </div>
                         <div className="login_input">
                             <input type="number" className="login_input1" placeholder='Phone number' value={phone} onChange={(e) => setPhone(e.target.value)} />
-                            {OTP?<input type="number" className="login_input1" placeholder='Enter OTP' value={otp} onChange={(e) => setOtp(e.target.value)} />:<></>}
+                            {OTP ? <input type="number" className="login_input1" placeholder='Enter OTP' value={otp} maxLength={6} onChange={(e) => setOtp(e.target.value)} /> : <></>}
+                            {
+                                userid!=""?userregistered?<></>:(<input type="text" className="login_input1" placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />):<></>
+                            }
+                            {userid!=""?userregistered?<></>:(<input type="email" className="login_input1" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />):<></>}
                             <Link style={{ textDecoration: "none" }}>
-                                <div className="dnjcbdjvd" onClick={()=>{OTP?verifyOTP():sendOTP();}}>
-                                    {OTP ? "Verify OTP" : "LOGIN"}
+                                <div className="dnjcbdjvd" onClick={() => { OTP ? getuserdetails() : sendOTP(); }}>
+                                    {OTP ?!userregistered?"Register User": "Verify OTP" : "LOGIN"}
                                 </div>
                             </Link>
                             <div className="djvbdbv">
