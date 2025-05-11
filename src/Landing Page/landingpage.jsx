@@ -1,6 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyDbvSTnxYTfPEPQ4HpHAjYQ3Gobas7MZY0",
+    authDomain: "vistaeats.firebaseapp.com",
+    projectId: "vistaeats",
+    storageBucket: "vistaeats.firebasestorage.app",
+    messagingSenderId: "931029105010",
+    appId: "1:931029105010:web:c1b851904598e90be045eb",
+    measurementId: "G-0C8M4W6GXJ"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+export const auth = getAuth(app);
 export default function Landingpage() {
     useEffect(() => {
         document.title = "Order Food & Groceries. Discover the best restaurants.";
@@ -8,6 +32,9 @@ export default function Landingpage() {
     const [showLogin, setShowLogin] = useState(false);
     const [clickedlogin, setclickedlogin] = useState(false);
     const [logindetails, setLoginDetails] = useState(false);
+    const [phone, setPhone] = useState("");
+    const [otp, setOtp] = useState("");
+    const [confirmationResult, setConfirmationResult] = useState(null);
     const toggleLogin = () => {
         setShowLogin(prev => !prev);
     };
@@ -32,6 +59,61 @@ export default function Landingpage() {
             }
         }
     }
+useEffect(() => {
+    if (showLogin && !window.recaptchaVerifier) {
+        const setupRecaptcha = () => {
+            const recaptchaContainer = document.getElementById('recaptcha-container');
+            if (!recaptchaContainer) {
+                console.error("reCAPTCHA container not found.");
+                return;
+            }
+
+            try {
+                window.recaptchaVerifier = new RecaptchaVerifier(
+                    recaptchaContainer,
+                    {
+                        size: 'invisible',
+                        callback: (response) => {
+                            console.log("reCAPTCHA verified");
+                        },
+                    },
+                    auth
+                );
+
+                console.log("reCAPTCHA successfully set up");
+            } catch (error) {
+                console.error("Error setting up reCAPTCHA:", error);
+            }
+        };
+
+        setupRecaptcha();
+    }
+}, [showLogin]);
+const [OTP, setOTP] = useState(false);
+const sendOTP = async () => {
+    const formattedPhone = phone.startsWith('+91 ') ? phone : `+91 ${phone}`;
+
+    try {
+        const appVerifier = window.recaptchaVerifier;
+        const result = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
+        setConfirmationResult(result);
+        setOTP(true);
+        // alert("OTP sent!");
+    } catch (error) {
+        console.error("Error sending OTP:", error);
+        // alert("Failed to send OTP");
+    }
+};
+
+
+    const verifyOTP = async () => {
+        try {
+            await confirmationResult.confirm(otp);
+            // alert("Phone number verified!");
+        } catch (error) {
+            console.error("Error verifying OTP:", error);
+        }
+    }
     return (
         <div className='webbody' style={{ overflowX: "hidden" }}>
             <div className="banner1">
@@ -50,10 +132,11 @@ export default function Landingpage() {
                             <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/Image-login_btpq7r" alt="" height={"80px"} width={"80px"} style={{ marginRight: "100px" }} />
                         </div>
                         <div className="login_input">
-                            <input type="number" className="login_input1" placeholder='Phone number' />
+                            <input type="number" className="login_input1" placeholder='Phone number' value={phone} onChange={(e) => setPhone(e.target.value)} />
+                            {OTP?<input type="number" className="login_input1" placeholder='Enter OTP' value={otp} onChange={(e) => setOtp(e.target.value)} />:<></>}
                             <Link style={{ textDecoration: "none" }}>
-                                <div className="dnjcbdjvd" onClick={checkLogin}>
-                                    LOGIN
+                                <div className="dnjcbdjvd" onClick={()=>{OTP?verifyOTP():sendOTP();}}>
+                                    {OTP ? "Verify OTP" : "LOGIN"}
                                 </div>
                             </Link>
                             <div className="djvbdbv">
@@ -67,6 +150,8 @@ export default function Landingpage() {
                                 )
                             }
                         </div>
+                        <div id="recaptcha-container"></div>
+
                     </div>
                 )}
                 <div className="headers">
@@ -119,38 +204,38 @@ export default function Landingpage() {
                 Shop groceries on Instamart
                 <div className="dhcdhvc">
                     <Link style={{ textDecoration: "none" }}>
-                    <div className="dhvhdbvdhv">
-                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/0a688af1-1bb4-4a55-8128-31fc79cc9ad0_6d0abb9a-daff-4fbe-a1c9-2dddb6ae6717" alt="" height={"200px"} width={"200px"} />
-                        <br />Fresh Vegetables
-                    </div>
+                        <div className="dhvhdbvdhv">
+                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/0a688af1-1bb4-4a55-8128-31fc79cc9ad0_6d0abb9a-daff-4fbe-a1c9-2dddb6ae6717" alt="" height={"200px"} width={"200px"} />
+                            <br />Fresh Vegetables
+                        </div>
                     </Link>
                     <Link style={{ textDecoration: "none" }}>
-                    <div className="dhvhdbvdhv">
-                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/85df9d8f-175f-4e3a-8945-468bf6317eee_eb9bf247-f2d1-413d-9cf5-48bc870b222f" alt="" height={"200px"} width={"200px"} />
-                        <br />Fresh Fruits
-                    </div>
-                    </Link>
-                   <Link style={{ textDecoration: "none" }}>
-                   <div className="dhvhdbvdhv">
-                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/639b3476-3476-4191-b804-63f03372187e_bc1e0aa4-8baa-4875-9095-3074791b7462" alt="" height={"200px"} width={"200px"} />
-                        <br />Dairy, Breads & Eggs
-                    </div>
-                   </Link>
-                    <Link style={{ textDecoration: "none" }}>
-                    <div className="dhvhdbvdhv">
-                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46" alt="" height={"200px"} width={"200px"} />
-                        <br />Rice, Atta and Dals
-                    </div>
+                        <div className="dhvhdbvdhv">
+                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/85df9d8f-175f-4e3a-8945-468bf6317eee_eb9bf247-f2d1-413d-9cf5-48bc870b222f" alt="" height={"200px"} width={"200px"} />
+                            <br />Fresh Fruits
+                        </div>
                     </Link>
                     <Link style={{ textDecoration: "none" }}>
-                    <div className="dhvhdbvdhv">
-                        <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46" alt="" height={"200px"} width={"200px"} />
-                        <br />Masalas & Dry Fruits
-                    </div>
+                        <div className="dhvhdbvdhv">
+                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/639b3476-3476-4191-b804-63f03372187e_bc1e0aa4-8baa-4875-9095-3074791b7462" alt="" height={"200px"} width={"200px"} />
+                            <br />Dairy, Breads & Eggs
+                        </div>
+                    </Link>
+                    <Link style={{ textDecoration: "none" }}>
+                        <div className="dhvhdbvdhv">
+                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46" alt="" height={"200px"} width={"200px"} />
+                            <br />Rice, Atta and Dals
+                        </div>
+                    </Link>
+                    <Link style={{ textDecoration: "none" }}>
+                        <div className="dhvhdbvdhv">
+                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/NI_CATALOG/IMAGES/CIW/2024/4/22/361c53ad-61d8-4ea7-a73d-e12c265d2d48_f174f2ff-021f-4035-b359-be281cba8d46" alt="" height={"200px"} width={"200px"} />
+                            <br />Masalas & Dry Fruits
+                        </div>
                     </Link>
                 </div>
                 <div className="hdfhdf">
-                Discover best restaurants on Dineout
+                    Discover best restaurants on Dineout
                 </div>
             </div>
         </div>
