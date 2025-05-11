@@ -66,7 +66,7 @@ export default function Accounts_homepage() {
         fetchUserData();
     }, [user]);
     return (
-        <div className="webbody" style={{ overflowY: "hidden" }}>
+        <div className="webbody" style={{ overflowX: 'scroll' }}>
             <Headers label="MY ACCOUNT" />
             <div className="jfnbjngb">
                 <div className="ndbhvbhfv">
@@ -75,7 +75,16 @@ export default function Accounts_homepage() {
                         {phone}    •    {email}
                     </div>
                 </div>
-                
+                <div className="dbnfjvnf">
+                    <div className="ffbvfv">
+                        <div className="bdvhdbvjdv">
+
+                        </div>
+                        <div className="dhgchdgd">
+                            <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_262/empty-orders-image_acrbbw" alt="" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
