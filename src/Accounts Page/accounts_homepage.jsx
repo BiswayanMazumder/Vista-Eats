@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { doc, getDoc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import Headers from '../Components/headers';
 
@@ -68,7 +68,11 @@ export default function Accounts_homepage() {
     const [orders, setorders] = useState([]);
     const [orderdetails, setorderdetails] = useState(false);
     const [activeTab, setActiveTab] = useState('Orders');
-
+    const [showLogin, setShowLogin] = useState(false);
+    const [clickedLogin, setClickedLogin] = useState(false);
+    const toggleLogin = () => {
+        setShowLogin((prev) => !prev);
+    };
     useState(() => {
         const fetchorders = async () => {
             const user = auth.currentUser;
@@ -82,10 +86,45 @@ export default function Accounts_homepage() {
         }
         fetchorders();
     }, [user]);
+    const [name, setName] = useState('');
+    const [emailid, setemailid] = useState('');
+    const updatedetails = async () => {
+        console.log(name);
+        console.log(emailid);
+        const user = auth.currentUser;
+        const uid = user.uid;
+        console.log(uid);
+        const docRef = doc(db, 'Users', uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            console.log(data);
+            const updatedData = {
+                'Name': name,
+                'Email': emailid,
+            };
+            await updateDoc(docRef, updatedData);
+            alert('User details updated successfully');
+            setusername(name);
+            setemail(emailid);
+            setName('');
+            setemailid('');
+            window.location.reload();
+        }
+    }
     return (
         <div className="webbody" style={{ overflowX: 'scroll' }}>
+            {showLogin && <div className='blur-overlay' onClick={toggleLogin}></div>}
+
+            {/* Sidebar login section */}
+            {showLogin && (
+                <div className='loginsection'>
+
+                </div>
+            )}
             <Headers label="MY ACCOUNT" />
             <div className="jfnbjngb">
+
                 <div className="ndbhvbhfv">
                     {username}
                     <div className="jdhvjv">
@@ -100,18 +139,18 @@ export default function Accounts_homepage() {
                                 style={{ backgroundColor: activeTab === 'Orders' ? 'white' : 'transparent' }}
                                 onClick={() => setActiveTab('Orders')}
                             >
-                                <Link  className="djcdjh" style={{ textDecoration: 'none', color: 'black' }}>
+                                <Link className="djcdjh" style={{ textDecoration: 'none', color: 'black' }}>
                                     Orders
                                 </Link>
                             </div>
 
                             <div
                                 className="ndjvhjdvhdj"
-                                style={{ backgroundColor: activeTab === 'Favourites' ? 'white' : 'transparent' }}
-                                onClick={() => setActiveTab('Favourites')}
+                                style={{ backgroundColor: activeTab === 'EditProfile' ? 'white' : 'transparent' }}
+                                onClick={() => setActiveTab('EditProfile')}
                             >
-                                <Link  className="jdfb" style={{ textDecoration: 'none', color: 'black' }}>
-                                    Favourites
+                                <Link className="jdfb" style={{ textDecoration: 'none', color: 'black' }}>
+                                    Edit Profile
                                 </Link>
                             </div>
 
@@ -120,7 +159,7 @@ export default function Accounts_homepage() {
                                 style={{ backgroundColor: activeTab === 'Addresses' ? 'white' : 'transparent' }}
                                 onClick={() => setActiveTab('Addresses')}
                             >
-                                <Link  className="bdvbdv" style={{ textDecoration: 'none', color: 'black' }}>
+                                <Link className="bdvbdv" style={{ textDecoration: 'none', color: 'black' }}>
                                     Addresses
                                 </Link>
                             </div>
@@ -130,10 +169,38 @@ export default function Accounts_homepage() {
                                 style={{ backgroundColor: activeTab === 'Payment' ? 'white' : 'transparent' }}
                                 onClick={() => setActiveTab('Payment')}
                             >
-                                <Link  className="ndbcdb" style={{ textDecoration: 'none', color: 'black' }}>
+                                <Link className="ndbcdb" style={{ textDecoration: 'none', color: 'black' }}>
                                     Payment
                                 </Link>
                             </div>
+                        </div>
+                        <div className="ghdbvdnv" style={{ justifyContent: activeTab === 'EditProfile' ? 'start' : 'center', marginTop: activeTab === 'EditProfile' ? '50px' : '0px' }}>
+                            {setorderdetails && activeTab === 'Orders' && (
+                                <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_262/empty-orders-image_acrbbw" alt="" height="200px" />
+                            )}
+                            {
+                                activeTab === 'EditProfile' && (
+                                    <div className='login_input' style={{ width: '100%' }}>
+                                        <input
+                                            type='text'
+                                            className='login_input1'
+                                            placeholder={username}
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                        />
+                                        <input
+                                            type='email'
+                                            className='login_input1'
+                                            placeholder={email}
+                                            value={emailid}
+                                            onChange={(e) => setemailid(e.target.value)}
+                                        />
+                                        <div
+                                            className='dnjcbdjvd' onClick={updatedetails}
+                                        >Update User Details</div>
+                                    </div>
+                                )
+                            }
                         </div>
                     </div>
 
