@@ -196,7 +196,9 @@ export default function Accounts_homepage() {
                                             onChange={(e) => setemailid(e.target.value)}
                                         />
                                         <div
-                                            className='dnjcbdjvd' onClick={updatedetails}
+                                            className='dnjcbdjvd' onClick={()=>{
+                                                name.length > 0 && emailid.length > 0 ? updatedetails() : alert('Please fill all the fields')
+                                            }}
                                         >Update User Details</div>
                                     </div>
                                 )
