@@ -3,13 +3,30 @@ import { Link } from 'react-router-dom';
 
 export default function Searching() {
     const [currentArea, setCurrentArea] = useState('');
+    const [lat, setlat] = useState(0);
+    const [long, setlong] = useState(0);
     useEffect(() => {
-            document.title = "Order Food & Groceries. Discover the best restaurants.";
-        }, []);
+        document.title = "Order Food & Groceries. Discover the best restaurants.";
+    }, []);
+    const [Data, setData] = useState([]);
+    const fetchData = async () => {
+        // await fetchlocation();
+        const result = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=20.3250645&lng=85.8170355&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
+        const results = await result.json();
+        // console.log(data?.data.cards[0].card?.card?.imageGridCards?.info);
+        const imageUrl = results?.data.cards[0].card?.card?.imageGridCards?.info[0]?.imageUrl;
+        setData(results?.data.cards[0]?.card?.card?.imageGridCards?.info);
+
+    }
     useEffect(() => {
+        fetchData();
+    }, []);
+    const fetchlocation = async () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (position) => {
                 const { latitude, longitude } = position.coords;
+                setlat(latitude);
+                setlong(longitude);
                 try {
                     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
                     const data = await response.json();
@@ -24,6 +41,9 @@ export default function Searching() {
         } else {
             console.warn("Geolocation not supported by this browser.");
         }
+    }
+    useEffect(() => {
+        fetchlocation();
     }, []);
 
     return (
@@ -39,8 +59,8 @@ export default function Searching() {
                         />
                     </Link>
                     <div className="location" style={{ display: "flex", flexDirection: "row" }}>
-                        Other 
-                        <div className="dhbdbv" style={{fontWeight: "500",marginLeft: "15px"}}>
+                        Other
+                        <div className="dhbdbv" style={{ fontWeight: "500", marginLeft: "15px" }}>
                             {currentArea}
                         </div>
                     </div>
@@ -59,7 +79,22 @@ export default function Searching() {
                     </div>
                     <div className="shgdhdfjdbf">
                         <div className="shfhf">
-                            <Link to="/item1">
+                            {
+                                Data.map((item, index) => {
+                                    if (index >= 13) return null;
+                                    return (
+                                        <Link to={`/item${index + 1}`} key={index}>
+                                            <img
+                                                src={`https://media-assets.swiggy.com/swiggy/image/upload/${item.imageId}`}
+                                                alt=""
+                                                height="120px"
+                                                width="80px"
+                                            />
+                                        </Link>
+                                    );
+                                })
+                            }
+                            {/* <Link to="/item1">
                                 <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/rng/md/carousel/production/b4ff78ecc5b8b66f732dd06228916d65" alt="" height="120px" width="80px" />
                             </Link>
                             <Link to="/item2">
@@ -94,7 +129,7 @@ export default function Searching() {
                             </Link>
                             <Link to="/item12">
                                 <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/rng/md/carousel/production/d0884e09ef431ee610e54a0bb2dfecd5" alt="" height="120px" width="80px" />
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </div>
