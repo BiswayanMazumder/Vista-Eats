@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { doc, getDoc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { doc, getDoc, getFirestore, updateDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import Headers from '../Components/headers';
 
-// Your web app's Firebase configuration
+// Firebase config
 const firebaseConfig = {
     apiKey: 'AIzaSyDbvSTnxYTfPEPQ4HpHAjYQ3Gobas7MZY0',
     authDomain: 'vistaeats.firebaseapp.com',
@@ -26,38 +25,42 @@ export const auth = getAuth(app);
 
 export default function Accounts_homepage() {
     const [user, setuser] = useState('');
+    const [username, setusername] = useState('');
+    const [email, setemail] = useState('');
+    const [phone, setphone] = useState('');
+    const [orders, setorders] = useState([]);
+    const [orderdetails, setorderdetails] = useState(false);
+    const [activeTab, setActiveTab] = useState('Orders');
+    const [showLogin, setShowLogin] = useState(false);
+    const [clickedLogin, setClickedLogin] = useState(false);
+    const [name, setName] = useState('');
+    const [emailid, setemailid] = useState('');
+
     useEffect(() => {
         document.title = "Order Food & Groceries. Discover the best restaurants.";
     }, []);
+
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 setuser(user.uid);
-                // console.log('User is signed in:', user.uid);
             } else {
                 window.location.href = '/';
-                // setuser(null);
             }
         });
         return unsubscribe;
     }, []);
-    const [username, setusername] = useState('');
-    const [email, setemail] = useState('');
-    const [phone, setphone] = useState('');
+
     useEffect(() => {
         const fetchUserData = async () => {
             if (user) {
-
                 const docRef = doc(db, 'Users', user);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    // console.log('Document data:', docSnap.data());
                     const data = docSnap.data();
                     setusername(data['Name']);
                     setemail(data['Email']);
                     setphone(data['Phone Number']);
-                    // console.log(data['Name']);
-                    // console.log(data['Email']);
                 } else {
                     console.log('No such document!');
                 }
@@ -65,72 +68,94 @@ export default function Accounts_homepage() {
         };
         fetchUserData();
     }, [user]);
-    const [orders, setorders] = useState([]);
-    const [orderdetails, setorderdetails] = useState(false);
-    const [activeTab, setActiveTab] = useState('Orders');
-    const [showLogin, setShowLogin] = useState(false);
-    const [clickedLogin, setClickedLogin] = useState(false);
-    const toggleLogin = () => {
-        setShowLogin((prev) => !prev);
-    };
-    useState(() => {
+
+    useEffect(() => {
         const fetchorders = async () => {
             const user = auth.currentUser;
+            if (!user) return;
             const uid = user.uid;
-            const docRef = doc(db, 'User Orders', user);
+            const docRef = doc(db, 'User Orders', uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 setorderdetails(true);
                 const data = docSnap.data();
+                setorders(data);
             }
-        }
+        };
         fetchorders();
     }, [user]);
-    const [name, setName] = useState('');
-    const [emailid, setemailid] = useState('');
+
+    const toggleLogin = () => {
+        setShowLogin((prev) => !prev);
+    };
+
     const updatedetails = async () => {
-        console.log(name);
-        console.log(emailid);
+        const trimmedName = name.trim();
+        const trimmedEmail = emailid.trim();
+
+        if (!trimmedName && !trimmedEmail) {
+            alert('Please fill at least one field to update');
+            return;
+        }
+
         const user = auth.currentUser;
+        if (!user) return;
+
         const uid = user.uid;
-        console.log(uid);
         const docRef = doc(db, 'Users', uid);
         const docSnap = await getDoc(docRef);
+
         if (docSnap.exists()) {
-            const data = docSnap.data();
-            console.log(data);
-            const updatedData = {
-                'Name': name,
-                'Email': emailid,
-            };
+            const currentData = docSnap.data();
+            const updatedData = {};
+
+            if (trimmedName && trimmedName !== currentData.Name) {
+                updatedData.Name = trimmedName;
+            }
+
+            if (trimmedEmail && trimmedEmail !== currentData.Email) {
+                updatedData.Email = trimmedEmail;
+            }
+
+            if (Object.keys(updatedData).length === 0) {
+                alert('No changes detected to update.');
+                return;
+            }
+
             await updateDoc(docRef, updatedData);
             alert('User details updated successfully');
-            setusername(name);
-            setemail(emailid);
+
+            if (updatedData.Name) setusername(updatedData.Name);
+            if (updatedData.Email) setemail(updatedData.Email);
+
             setName('');
             setemailid('');
-            window.location.reload();
+            // window.location.reload();
+        } else {
+            alert('User data not found.');
         }
-    }
+    };
+
     return (
         <div className="webbody" style={{ overflowX: 'scroll' }}>
             {showLogin && <div className='blur-overlay' onClick={toggleLogin}></div>}
 
-            {/* Sidebar login section */}
             {showLogin && (
                 <div className='loginsection'>
-
+                    {/* Add your login section content here */}
                 </div>
             )}
-            <Headers label="MY ACCOUNT" />
-            <div className="jfnbjngb">
 
+            <Headers label="MY ACCOUNT" />
+
+            <div className="jfnbjngb">
                 <div className="ndbhvbhfv">
                     {username}
                     <div className="jdhvjv">
-                        {phone}    •    {email}
+                        {phone} • {email}
                     </div>
                 </div>
+
                 <div className="dbnfjvnf">
                     <div className="ffbvfv">
                         <div className="bdvhdbvjdv">
@@ -174,40 +199,62 @@ export default function Accounts_homepage() {
                                 </Link>
                             </div>
                         </div>
-                        <div className="ghdbvdnv" style={{ justifyContent: activeTab === 'EditProfile' ? 'start' : 'center', marginTop: activeTab === 'EditProfile' ? '50px' : '0px' }}>
-                            {setorderdetails && activeTab === 'Orders' && (
-                                <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_262/empty-orders-image_acrbbw" alt="" height="200px" />
+
+                        <div
+                            className="ghdbvdnv"
+                            style={{
+                                justifyContent: activeTab === 'Orders' ? 'center' : 'start',
+                                marginTop: activeTab === 'EditProfile' || activeTab === 'Addresses' || activeTab === 'Payment' ? '50px' : '0px'
+                            }}
+                        >
+                            {activeTab === 'Orders' && (
+                                <img
+                                    src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_262/empty-orders-image_acrbbw"
+                                    alt="No orders"
+                                    height="200px"
+                                />
                             )}
-                            {
-                                activeTab === 'EditProfile' && (
-                                    <div className='login_input' style={{ width: '100%' }}>
-                                        <input
-                                            type='text'
-                                            className='login_input1'
-                                            placeholder={username}
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                        />
-                                        <input
-                                            type='email'
-                                            className='login_input1'
-                                            placeholder={email}
-                                            value={emailid}
-                                            onChange={(e) => setemailid(e.target.value)}
-                                        />
-                                        <div
-                                            className='dnjcbdjvd' onClick={()=>{
-                                                name.length > 0 && emailid.length > 0 ? updatedetails() : alert('Please fill all the fields')
-                                            }}
-                                        >Update User Details</div>
+
+                            {activeTab === 'EditProfile' && (
+                                <div className='login_input' style={{ width: '100%' }}>
+                                    <input
+                                        type='text'
+                                        className='login_input1'
+                                        placeholder={username}
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                    <input
+                                        type='email'
+                                        className='login_input1'
+                                        placeholder={email}
+                                        value={emailid}
+                                        onChange={(e) => setemailid(e.target.value)}
+                                    />
+                                    <div
+                                        className='dnjcbdjvd'
+                                        onClick={() => {
+                                            updatedetails();
+                                        }}
+                                    >
+                                        Update User Details
                                     </div>
-                                )
-                            }
+                                </div>
+                            )}
+                            {activeTab === 'Addresses' && (
+                                <div className='login_input' style={{ width: '100%',marginTop:'20px',marginLeft:'50px',fontWeight:'bold',fontSize:'20px' }}>
+                                    Manage Addresses
+                                </div>
+                            )}
+                            {activeTab === 'Payment' && (
+                                <div className='login_input' style={{ width: '100%',marginTop:'20px',marginLeft:'50px',fontWeight:'bold',fontSize:'20px' }}>
+                                    Payments
+                                </div>
+                            )}
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-    )
+    );
 }
